@@ -5,7 +5,7 @@ from utils.entity import Entity
 import math
 from ray import Ray
 from caster import Caster
-
+import vnoise
 
 
 
@@ -20,6 +20,7 @@ class Demo(GameFramework):
         self.caster = None
         self.ray_number = 500
         self. wall_number = 9
+        self.noise = vnoise.Noise()
         
     #INITIALISATION CALLBACK
     def on_create(self):
@@ -55,9 +56,16 @@ class Demo(GameFramework):
     #DRAWING CALLBACK
     def on_update(self, screen, delta_time,time):
         screen.fill((22,22,22))
+        '''
+        offsetx = math.sin(time)*0.25 +0.25
+        x = self.noise.noise1(offsetx)
+        x = self.map_range(x,0,5,0,self.screen_width)
 
+        print(x,offsetx)
+        '''
         self.caster.draw(screen,(255,255,255),self.walls)
         self.caster.set_position(Vector2(self.mouse_x,self.mouse_y))
+        #self.caster.set_position(Vector2(x,self.mouse_y))
     
     def __recreate_walls(self):
         walls = []
@@ -80,4 +88,6 @@ class Demo(GameFramework):
         return walls
 
         
+    def map_range(self,value, start1, stop1, start2, stop2):
+        return (value - start1) / (stop1 - start1) * (stop2 - start2) + start2
   
